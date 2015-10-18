@@ -1,7 +1,7 @@
 # {{ ansible_managed }}
 
 user {{ nginx_default_user }};
-worker_processes auto;
+worker_processes {{ ansible_processor_vcpus }};
 pid /run/nginx.pid;
 
 events {

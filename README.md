@@ -6,7 +6,7 @@
 
 ## Introduction
 
-This role installs Nginx on RedHat/CentOS and Debian/Ubuntu Linux servers
+This role installs Nginx on RedHat/CentOS and Debian/Ubuntu Linux servers.
 
 ## Requirements
 
