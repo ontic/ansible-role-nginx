@@ -1,0 +1,91 @@
+# This source file is subject to the (Open Source Initiative) BSD license
+# that is bundled with this package in the LICENSE file. It is also available
+# through the world-wide-web at this URL: http://www.ontic.com.au/license.html
+# If you did not receive a copy of the license and are unable to obtain it through
+# the world-wide-web, please send an email to license@ontic.com.au immediately.
+# Copyright (c) 2010-2015 Ontic. (http://www.ontic.com.au). All rights reserved.
+
+---
+
+- name: Nginx | Debian | Install Nginx dependencies.
+  sudo: yes
+  apt:
+    pkg: '{{ item }}'
+    state: present
+  with_items:
+    - python-pycurl
+  when: ansible_os_family == 'Debian'
+  tags:
+    - package
+    - nginx
+
+- name: Nginx | Debian | Add APT repository.
+  sudo: yes
+  apt_repository:
+    repo: '{{ nginx_repository }}'
+    update_cache: yes
+  when: ansible_os_family == 'Debian' and nginx_repository
+  tags:
+    - package
+    - nginx
+
+- name: Nginx | RedHat | Add YUM repository.
+  sudo: yes
+  template:
+    src: nginx.repo.j2
+    dest: /etc/yum.repos.d/nginx.repo
+    owner: root
+    group: root
+    mode: 0644
+  when: ansible_os_family == 'RedHat'
+  tags:
+    - package
+    - nginx
+
+- name: Nginx | Debian | Install specific Nginx version.
+  sudo: yes
+  apt:
+    pkg: 'nginx={{ nginx_pkg_version }}'
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  when: ansible_os_family == 'Debian' and nginx_pkg_version
+  tags:
+    - package
+    - nginx
+
+- name: Nginx | RedHat | Install specific Nginx version.
+  sudo: yes
+  yum:
+    name: 'nginx={{ nginx_pkg_version }}'
+    state: present
+    enablerepo: nginx
+    update_cache: yes
+  when: ansible_os_family == 'RedHat' and nginx_pkg_version
+  tags:
+    - package
+    - nginx
+
+- name: Nginx | Debian | Install latest Nginx version.
+  sudo: yes
+  apt:
+    pkg: nginx
+    state: '{{ nginx_pkg_state }}'
+    update_cache: yes
+    cache_valid_time: 3600
+  when: ansible_os_family == 'Debian' and not nginx_pkg_version
+  tags:
+    - package
+    - nginx
+
+- name: Nginx | RedHat | Install latest Nginx version.
+  sudo: yes
+  yum:
+    name: nginx
+    state: '{{ nginx_pkg_state }}'
+    enablerepo: nginx
+    update_cache: yes
+  when: ansible_os_family == 'RedHat' and not nginx_pkg_version
+  tags:
+    - package
+    - nginx
