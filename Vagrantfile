@@ -19,7 +19,7 @@ Vagrant.configure('2') do |config|
 		
 		if Vagrant::Util::Platform.windows?
 			server.vm.provision 'shell' do |shell|
-				shell.path = '~/Repositories/ontic/ansible-windows/provision.sh'
+				shell.path = '~/ansible-windows/provision.sh'
 				shell.args = 'tests/playbook.yml tests/inventory'
 			end
 		else
@@ -50,7 +50,7 @@ Vagrant.configure('2') do |config|
 		
 		if Vagrant::Util::Platform.windows?
 			server.vm.provision 'shell' do |shell|
-				shell.path = '~/Repositories/ontic/ansible-windows/provision.sh'
+				shell.path = '~/ansible-windows/provision.sh'
 				shell.args = 'tests/playbook.yml tests/inventory'
 			end
 		else
