@@ -33,7 +33,7 @@ Clone the project it into your `./roles/` directory.
 The easiest way to install this module is via the command line:
 
 ```
-$ ansible-galaxy install ontic.ntp
+$ ansible-galaxy install ontic.nginx
 ```
 
 If you have multiple roles to install, the ansible-galaxy CLI can be fed a `requirements.yml` file.
