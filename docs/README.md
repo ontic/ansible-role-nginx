@@ -8,7 +8,7 @@ nginx_server_templates:
   - filename: default
     state: absent
   - filename: yourdomain
-      template: yourdomain.nginx.server.j2
+    template: yourdomain.nginx.server.j2
 ```
 
 ## Role Variables
@@ -16,22 +16,76 @@ nginx_server_templates:
 Available variables are listed below, along with default values (see [defaults/main.yml](/defaults/main.yml)):
 
 ```
-nginx_repository:
+nginx_ppa:
 ```
 
-The repository to add to APT. Which would allow more recent versions of Nginx to be installed.
+The launchpad PPA to add to APT. Which would allow a non-official package of Nginx to be installed.
 
 ```
-nginx_pkg_version:
+nginx_repo_state: present
 ```
 
-The Nginx package version you want to install. If omitted `nginx_pkg_state` will be used.
+The desired Nginx repository state, valid values are `present`, or `absent`.
 
 ```
-nginx_pkg_state: present
+nginx_repo_uid: nginx
 ```
 
-The desired Nginx package state, valid values are `latest`, `present`, or `absent`.
+The unique repository identifier for RedHat/CentOS .
+
+```
+nginx_repo_name: Nginx
+```
+
+The human readable repository name for RedHat/CentOS.
+
+```
+nginx_repo_baseurl: http://nginx.org/packages/centos/{{ ansible_distribution_major_version }}/$basearch/
+```
+
+The repository URL for RedHat/CentOS.
+
+```
+nginx_repo_gpgkey: http://nginx.org/keys/nginx_signing.key
+```
+
+The GPG key URL for RedHat/CentOS.
+
+```
+nginx_repo_gpgcheck: 1
+```
+
+Whether GPG signature checking is enabled or disabled for RedHat/CentOS.
+
+```
+nginx_repo_enabled: 1
+```
+
+Whether the repository is enabled or disabled globally for RedHat/CentOS.
+
+```
+nginx_repo_url: deb http://nginx.org/packages/ubuntu/ {{ ansible_distribution_release | lower }} nginx
+```
+
+The repository URL for Debian/Ubuntu.
+
+```
+nginx_repo_key_id: 7BD9BF62
+```
+
+The repository key identifier for Debian/Ubuntu.
+
+```
+nginx_repo_key_server: http://nginx.org/keys/nginx_signing.key
+```
+
+The keyserver to provide the GPG key for Debian/Ubuntu.
+
+```
+nginx_service_name:
+```
+
+The name of the daemon under which Nginx runs.
 
 ```
 nginx_service_state: started
@@ -44,6 +98,18 @@ nginx_service_enabled: yes
 ```
 
 Whether the Nginx service should start on boot, valid values are `yes`, or `no`.
+
+```
+nginx_packages:
+```
+
+A list of the Nginx packages to install. Each package supports all parameters from the
+[apt](http://docs.ansible.com/ansible/apt_module.html) or [yum](http://docs.ansible.com/ansible/yum_module.html) modules.
+If the value remains omitted, the following packages will be installed by default.
+
+| Debian/Ubuntu          | RedHat/CentOS           |
+| :--------------------- | :---------------------- |
+| nginx                  | nginx                   |
 
 ```
 nginx_conf_template: default.nginx.conf.j2

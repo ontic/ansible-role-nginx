@@ -12,4 +12,3 @@
   service:
     name: '{{ nginx_service_name }}'
     state: restarted
-  when: nginx_service_state == 'started' and not nginx_pkg_state == 'absent'

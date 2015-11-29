@@ -7,6 +7,18 @@
 
 ---
 
+- name: Nginx | Ensure the vhost directory exists.
+  sudo: yes
+  file:
+    path: '{{ nginx_vhost_path }}'
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  tags:
+    - configure
+    - nginx
+
 - name: Nginx | Configure mime types file.
   sudo: yes
   template:
