@@ -54,6 +54,7 @@
   file:
     path: '/etc/yum.repos.d/{{ nginx_repo_uid }}.repo'
     state: absent
+  register: nginx_repo_removed
   when: ansible_os_family == 'RedHat' and nginx_repo_state | default('present') == 'absent'
   tags:
     - package
@@ -67,6 +68,7 @@
     owner: root
     group: root
     mode: 0644
+  register: nginx_repo_added
   when: ansible_os_family == 'RedHat' and nginx_repo_state | default('present') == 'present'
   tags:
     - package
@@ -113,7 +115,7 @@
     exclude: '{{ item.exclude | default(omit) }}'
     list: '{{ item.list | default(omit) }}'
     state: '{{ item.state | default(omit) }}'
-    update_cache: '{{ item.update_cache | default(omit) }}'
+    update_cache: '{{ nginx_repo_removed.changed or nginx_repo_added.changed or item.update_cache | default(omit) }}'
   with_items: nginx_packages
   when: ansible_os_family == 'RedHat' and nginx_packages
   tags:
