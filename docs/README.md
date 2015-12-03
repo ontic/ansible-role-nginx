@@ -100,6 +100,12 @@ nginx_service_enabled: yes
 Whether the Nginx service should start on boot, valid values are `yes`, or `no`.
 
 ```
+nginx_disable_apache: no
+```
+
+Whether an attempt is made to stop Apache and prevent it from automatically starting on boot. 
+
+```
 nginx_packages:
 ```
 
