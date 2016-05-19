@@ -21,6 +21,7 @@ nginx_repo_key_server: http://nginx.org/keys/nginx_signing.key
 nginx_service_name: nginx
 nginx_service_state: started
 nginx_service_enabled: yes
+nginx_disable_apache: no
 nginx_packages:
 nginx_conf_template: default.nginx.conf.j2
 nginx_mime_types_template: default.mime.types.j2

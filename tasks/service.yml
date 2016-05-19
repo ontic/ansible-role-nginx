@@ -7,6 +7,16 @@
 
 ---
 
+- name: Nginx | Disable Apache service.
+  service:
+    name: '{{ "apache2" if ansible_os_family == "Debian" else "httpd" }}'
+    state: stopped
+    enabled: no
+  when: nginx_disable_apache and nginx_disable_apache == true
+  tags:
+    - service
+    - nginx
+
 - name: Nginx | Enable Nginx service.
   service:
     name: '{{ nginx_service_name }}'
