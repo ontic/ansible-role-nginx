@@ -27,7 +27,7 @@
     owner: root
     group: root
     mode: 0644
-  when: nginx_mime_types_template
+  when: nginx_mime_types_template | default(None) != None
   tags:
     - configure
     - nginx
@@ -67,7 +67,7 @@
     owner: root
     group: root
     mode: 0644
-  when: nginx_conf_template
+  when: nginx_conf_template | default(None) != None
   notify: restart nginx
   tags:
     - configure
