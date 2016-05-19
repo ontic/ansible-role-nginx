@@ -3,12 +3,12 @@
 # through the world-wide-web at this URL: http://www.ontic.com.au/license.html
 # If you did not receive a copy of the license and are unable to obtain it through
 # the world-wide-web, please send an email to license@ontic.com.au immediately.
-# Copyright (c) 2010-2015 Ontic. (http://www.ontic.com.au). All rights reserved.
+# Copyright (c) 2010-2016 Ontic. (http://www.ontic.com.au). All rights reserved.
 
 ---
 
 - name: Nginx | Debian | Add launchpad PPA.
-  sudo: yes
+  become: yes
   apt_repository:
     repo: '{{ nginx_ppa }}'
     update_cache: yes
@@ -18,7 +18,7 @@
     - nginx
 
 - name: Nginx | Debian | Update repository key.
-  sudo: yes
+  become: yes
   apt_key:
     id: '{{ nginx_repo_key_id }}'
     keyserver: '{{ nginx_repo_key_server }}'
@@ -30,7 +30,7 @@
     - nginx
 
 - name: Nginx | Debian | Update repository list.
-  sudo: yes
+  become: yes
   apt_repository:
     repo: '{{ nginx_repo_url }}'
     state: '{{ nginx_repo_state }}'
@@ -41,7 +41,7 @@
     - nginx
 
 - name: Nginx | Debian | Update APT cache.
-  sudo: yes
+  become: yes
   apt:
     update_cache: yes
   when: ansible_os_family == 'Debian' and (nginx_key.changed or nginx_list.changed)
@@ -50,7 +50,7 @@
     - nginx
 
 - name: Nginx | RedHat | Remove absent repository.
-  sudo: yes
+  become: yes
   file:
     path: '/etc/yum.repos.d/{{ nginx_repo_uid }}.repo'
     state: absent
@@ -61,7 +61,7 @@
     - nginx
 
 - name: Nginx | RedHat | Add present repository.
-  sudo: yes
+  become: yes
   template:
     src: yum.repo.j2
     dest: '/etc/yum.repos.d/{{ nginx_repo_uid }}.repo'
@@ -75,7 +75,7 @@
     - nginx
 
 - name: Nginx | Debian | Install Curl Python package.
-  sudo: yes
+  become: yes
   apt:
     pkg: python-pycurl
     state: present
@@ -85,7 +85,7 @@
     - nginx
 
 - name: Nginx | Debian | Install Nginx packages.
-  sudo: yes
+  become: yes
   apt:
     name: '{{ item.name if item.version is not defined else item.name + "=" + item.version }}'
     cache_valid_time: '{{ item.cache_valid_time | default(omit) }}'
@@ -98,14 +98,14 @@
     state: '{{ item.state | default(omit) }}'
     update_cache: '{{ item.update_cache | default(omit) }}'
     upgrade: '{{ item.upgrade | default(omit) }}'
-  with_items: nginx_packages
+  with_items: '{{ nginx_packages }}'
   when: ansible_os_family == 'Debian' and nginx_packages
   tags:
     - package
     - nginx
 
 - name: Nginx | RedHat | Install Nginx packages.
-  sudo: yes
+  become: yes
   yum:
     name: '{{ item.name if item.version is not defined else item.name + "-" + item.version }}'
     conf_file: '{{ item.conf_file | default(omit) }}'
@@ -116,7 +116,7 @@
     list: '{{ item.list | default(omit) }}'
     state: '{{ item.state | default(omit) }}'
     update_cache: '{{ nginx_repo_removed.changed or nginx_repo_added.changed or item.update_cache | default(omit) }}'
-  with_items: nginx_packages
+  with_items: '{{ nginx_packages }}'
   when: ansible_os_family == 'RedHat' and nginx_packages
   tags:
     - package

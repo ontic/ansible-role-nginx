@@ -3,12 +3,12 @@
 # through the world-wide-web at this URL: http://www.ontic.com.au/license.html
 # If you did not receive a copy of the license and are unable to obtain it through
 # the world-wide-web, please send an email to license@ontic.com.au immediately.
-# Copyright (c) 2010-2015 Ontic. (http://www.ontic.com.au). All rights reserved.
+# Copyright (c) 2010-2016 Ontic. (http://www.ontic.com.au). All rights reserved.
 
 ---
 
 - name: Nginx | Ensure the vhost directory exists.
-  sudo: yes
+  become: yes
   file:
     path: '{{ nginx_vhost_path }}'
     state: directory
@@ -20,19 +20,20 @@
     - nginx
 
 - name: Nginx | Configure mime types file.
-  sudo: yes
+  become: yes
   template:
     src: '{{ nginx_mime_types_template }}'
     dest: '{{ nginx_dir }}/mime.types'
     owner: root
     group: root
     mode: 0644
+  when: nginx_mime_types_template
   tags:
     - configure
     - nginx
 
 - name: Nginx | Configure present server files.
-  sudo: yes
+  become: yes
   template:
     src: '{{ item.template }}'
     dest: '{{ nginx_vhost_path }}/{{ item.filename }}'
@@ -40,32 +41,33 @@
     group: root
     mode: 0644
   notify: restart nginx
-  with_items: nginx_server_templates
+  with_items: '{{ nginx_server_templates }}'
   when: item.state | default('present') != 'absent'
   tags:
     - configure
     - nginx
 
 - name: Nginx | Configure absent server files.
-  sudo: yes
+  become: yes
   file:
     path: '{{ nginx_vhost_path }}/{{ item.filename }}'
     state: absent
   notify: restart nginx
-  with_items: nginx_server_templates
+  with_items: '{{ nginx_server_templates }}'
   when: item.state | default('present') == 'absent'
   tags:
     - configure
     - nginx
 
 - name: Nginx | Configure Nginx conf file.
-  sudo: yes
+  become: yes
   template:
     src: '{{ nginx_conf_template }}'
     dest: '{{ nginx_dir }}/nginx.conf'
     owner: root
     group: root
     mode: 0644
+  when: nginx_conf_template
   notify: restart nginx
   tags:
     - configure
