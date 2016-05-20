@@ -25,6 +25,7 @@
   args:
     creates: '{{ nginx_vhost_path }}/default'
     removes: '{{ nginx_conf_path }}/default.conf'
+  notify: restart nginx
   when: nginx_conf_path != nginx_vhost_path
   tags:
     - configure
@@ -38,6 +39,7 @@
     owner: root
     group: root
     mode: 0644
+  notify: restart nginx
   when: nginx_mime_types_template | default(None) != None
   tags:
     - configure
