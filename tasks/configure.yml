@@ -19,6 +19,17 @@
     - configure
     - nginx
 
+- name: Nginx | Ensure the default vhost exists in the vhost path.
+  become: yes
+  command: 'mv {{ nginx_conf_path }}/default {{ nginx_vhost_path }}/default'
+    args:
+      creates: '{{ nginx_vhost_path }}/default'
+      removes: '{{ nginx_conf_path }}/default'
+  when: nginx_conf_path != nginx_vhost_path
+  tags:
+    - configure
+    - nginx
+
 - name: Nginx | Configure mime types file.
   become: yes
   template:
