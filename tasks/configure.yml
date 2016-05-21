@@ -42,7 +42,7 @@
     mode: '{{ item.mode | default(0644) }}'
     group: 'root'
     owner: 'root'
-  with_items: '{{ nginx_ssl_files | list }}'
+  with_items: '{{ nginx_ssl_files | default([]) }}'
 
 - name: Nginx | Configure mime types file.
   become: yes
