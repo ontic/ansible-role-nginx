@@ -10,26 +10,14 @@
 - name: Nginx | Include OS-specific variables.
   include_vars: '{{ ansible_os_family }}.yml'
   tags:
-    - nginx
-    - nginx-package
-    - nginx-configure
-    - nginx-service
-    - package
-    - configure
-    - service
+    - always
 
 - name: Nginx | Define Nginx packages.
   set_fact:
     nginx_packages: '{{ nginx_default_packages | list }}'
   when: not nginx_packages
   tags:
-    - nginx
-    - nginx-package
-    - nginx-configure
-    - nginx-service
-    - package
-    - configure
-    - service
+    - always
 
 - include: package.yml
   tags:
