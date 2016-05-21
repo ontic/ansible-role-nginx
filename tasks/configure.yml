@@ -15,9 +15,15 @@
     owner: root
     group: root
     mode: 0755
-  tags:
-    - configure
-    - nginx
+
+- name: Nginx | Ensure the ssl directory exists.
+  become: yes
+  file:
+    path: '{{ nginx_dir }}/ssl'
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
 
 - name: Nginx | Ensure the default vhost exists in the vhost path.
   become: yes
@@ -27,9 +33,16 @@
     removes: '{{ nginx_conf_path }}/default.conf'
   notify: restart nginx
   when: nginx_conf_path != nginx_vhost_path
-  tags:
-    - configure
-    - nginx
+
+- name: Nginx | Configure SSL certificate files.
+  copy:
+    dest: '{{ nginx_dir }}/ssl/{{ item.name }}'
+    src: '{{ item.src | default(omit) }}'
+    content: '{{ item.content | default(omit) }}'
+    mode: '{{ item.mode | default(0644) }}'
+    group: 'root'
+    owner: 'root'
+  with_items: '{{ nginx_ssl_files | list }}'
 
 - name: Nginx | Configure mime types file.
   become: yes
@@ -41,9 +54,6 @@
     mode: 0644
   notify: restart nginx
   when: nginx_mime_types_template | default(None) != None
-  tags:
-    - configure
-    - nginx
 
 - name: Nginx | Configure present server files.
   become: yes
@@ -56,9 +66,6 @@
   notify: restart nginx
   with_items: '{{ nginx_server_templates }}'
   when: item.state | default('present') != 'absent'
-  tags:
-    - configure
-    - nginx
 
 - name: Nginx | Configure absent server files.
   become: yes
@@ -68,9 +75,6 @@
   notify: restart nginx
   with_items: '{{ nginx_server_templates }}'
   when: item.state | default('present') == 'absent'
-  tags:
-    - configure
-    - nginx
 
 - name: Nginx | Configure Nginx conf file.
   become: yes
@@ -82,6 +86,3 @@
     mode: 0644
   when: nginx_conf_template | default(None) != None
   notify: restart nginx
-  tags:
-    - configure
-    - nginx

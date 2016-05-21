@@ -9,6 +9,11 @@ nginx_server_templates:
     state: absent
   - filename: yourdomain
     template: yourdomain.nginx.server.j2
+nginx_ssl_files:
+  - src: loadbalancer/nginx/ssl/development.crt
+    name: development.crt
+  - src: loadbalancer/nginx/ssl/development.key
+    name: development.key
 ```
 
 ## Role Variables
@@ -116,6 +121,15 @@ If the value remains omitted, the following packages will be installed by defaul
 | Debian/Ubuntu          | RedHat/CentOS           |
 | :--------------------- | :---------------------- |
 | nginx                  | nginx                   |
+
+```
+nginx_ssl_files:
+```
+
+The SSl certificate files you would like to manage. Each file expects two parameters, `name` which is the
+name of the destination file, you can either specify `src` when transferring a file or `content` when
+setting the contents of a file. An optional parameter `mode` can be specified, determining the permissions
+set on the destination file.
 
 ```
 nginx_conf_template: default.nginx.conf.j2

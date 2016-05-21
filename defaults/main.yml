@@ -23,6 +23,7 @@ nginx_service_state: started
 nginx_service_enabled: yes
 nginx_disable_apache: no
 nginx_packages:
+nginx_ssl_files:
 nginx_conf_template: default.nginx.conf.j2
 nginx_mime_types_template: default.mime.types.j2
 nginx_server_templates:

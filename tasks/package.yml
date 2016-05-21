@@ -13,9 +13,6 @@
     repo: '{{ nginx_ppa }}'
     update_cache: yes
   when: ansible_os_family == 'Debian' and nginx_ppa
-  tags:
-    - package
-    - nginx
 
 - name: Nginx | Debian | Update repository key.
   become: yes
@@ -25,9 +22,6 @@
     state: '{{ nginx_repo_state }}'
   register: nginx_key
   when: ansible_os_family == 'Debian'
-  tags:
-    - package
-    - nginx
 
 - name: Nginx | Debian | Update repository list.
   become: yes
@@ -36,18 +30,12 @@
     state: '{{ nginx_repo_state }}'
   register: nginx_list
   when: ansible_os_family == 'Debian'
-  tags:
-    - package
-    - nginx
 
 - name: Nginx | Debian | Update APT cache.
   become: yes
   apt:
     update_cache: yes
   when: ansible_os_family == 'Debian' and (nginx_key.changed or nginx_list.changed)
-  tags:
-    - package
-    - nginx
 
 - name: Nginx | RedHat | Remove absent repository.
   become: yes
@@ -56,9 +44,6 @@
     state: absent
   register: nginx_repo_removed
   when: ansible_os_family == 'RedHat' and nginx_repo_state | default('present') == 'absent'
-  tags:
-    - package
-    - nginx
 
 - name: Nginx | RedHat | Add present repository.
   become: yes
@@ -70,9 +55,6 @@
     mode: 0644
   register: nginx_repo_added
   when: ansible_os_family == 'RedHat' and nginx_repo_state | default('present') == 'present'
-  tags:
-    - package
-    - nginx
 
 - name: Nginx | Debian | Install Curl Python package.
   become: yes
@@ -80,9 +62,6 @@
     pkg: python-pycurl
     state: present
   when: ansible_os_family == 'Debian'
-  tags:
-    - package
-    - nginx
 
 - name: Nginx | Debian | Install Nginx packages.
   become: yes
@@ -100,9 +79,6 @@
     upgrade: '{{ item.upgrade | default(omit) }}'
   with_items: '{{ nginx_packages }}'
   when: ansible_os_family == 'Debian' and nginx_packages
-  tags:
-    - package
-    - nginx
 
 - name: Nginx | RedHat | Install Nginx packages.
   become: yes
@@ -118,6 +94,3 @@
     update_cache: '{{ nginx_repo_removed.changed or nginx_repo_added.changed or item.update_cache | default(omit) }}'
   with_items: '{{ nginx_packages }}'
   when: ansible_os_family == 'RedHat' and nginx_packages
-  tags:
-    - package
-    - nginx
