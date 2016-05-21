@@ -43,7 +43,7 @@
     group: 'root'
     owner: 'root'
   with_items: '{{ nginx_ssl_files }}'
-  when: nginx_ssl_files is defined
+  when: nginx_ssl_files | default(None) != None
 
 - name: Nginx | Configure mime types file.
   become: yes
