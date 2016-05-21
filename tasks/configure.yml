@@ -35,6 +35,7 @@
   when: nginx_conf_path != nginx_vhost_path
 
 - name: Nginx | Configure SSL certificate files.
+  become: yes
   copy:
     dest: '{{ nginx_dir }}/ssl/{{ item.name }}'
     src: '{{ item.src | default(omit) }}'
