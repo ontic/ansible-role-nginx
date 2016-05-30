@@ -57,6 +57,27 @@
   notify: restart nginx
   when: nginx_mime_types_template | default(None) != None
 
+- name: Nginx | Configure present config files.
+  become: yes
+  template:
+    src: '{{ item.template }}'
+    dest: '{{ nginx_conf_path }}/{{ item.filename }}'
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart nginx
+  with_items: '{{ nginx_config_templates }}'
+  when: nginx_config_templates and item.state | default('present') != 'absent'
+
+- name: Nginx | Configure absent config files.
+  become: yes
+  file:
+    path: '{{ nginx_conf_path }}/{{ item.filename }}'
+    state: absent
+  notify: restart nginx
+  with_items: '{{ nginx_config_templates }}'
+  when: nginx_config_templates and item.state | default('present') == 'absent'
+
 - name: Nginx | Configure present server files.
   become: yes
   template:
