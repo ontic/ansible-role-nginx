@@ -8,25 +8,25 @@
 ---
 
 nginx_ppa:
-nginx_repo_state: present
-nginx_repo_uid: nginx
-nginx_repo_name: Nginx
-nginx_repo_baseurl: http://nginx.org/packages/centos/{{ ansible_distribution_major_version }}/$basearch/
-nginx_repo_gpgkey: http://nginx.org/keys/nginx_signing.key
-nginx_repo_gpgcheck: 1
-nginx_repo_enabled: 1
-nginx_repo_url: deb http://nginx.org/packages/ubuntu/ {{ ansible_distribution_release | lower }} nginx
-nginx_repo_key_id: 7BD9BF62
-nginx_repo_key_server: http://nginx.org/keys/nginx_signing.key
-nginx_service_name: nginx
-nginx_service_state: started
+nginx_repo_state: 'present'
+nginx_repo_uid: 'nginx'
+nginx_repo_name: 'Nginx'
+nginx_repo_baseurl: 'http://nginx.org/packages/centos/{{ ansible_distribution_major_version }}/$basearch/'
+nginx_repo_gpgkey: 'http://nginx.org/keys/nginx_signing.key'
+nginx_repo_gpgcheck: '1'
+nginx_repo_enabled: '1'
+nginx_repo_url: 'deb http://nginx.org/packages/ubuntu/ {{ ansible_distribution_release | lower }} nginx'
+nginx_repo_key_id: '7BD9BF62'
+nginx_repo_key_server: 'http://nginx.org/keys/nginx_signing.key'
+nginx_service_name: 'nginx'
+nginx_service_state: 'started'
 nginx_service_enabled: yes
 nginx_disable_apache: no
 nginx_packages:
 nginx_ssl_files:
-nginx_conf_template: default.nginx.conf.j2
-nginx_mime_types_template: default.mime.types.j2
+nginx_conf_template: 'default.nginx.conf.j2'
+nginx_mime_types_template: 'default.mime.types.j2'
 nginx_config_templates:
 nginx_server_templates:
-  - filename: default
-    template: default.nginx.server.j2
+  - filename: 'default'
+    template: 'default.nginx.server.j2'

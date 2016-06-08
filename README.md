@@ -2,7 +2,7 @@
 
 | Branch             | Build               | Galaxy              | Release              |
 | :----------------- | :------------------ | :------------------ | :------------------- |
-| **master**         | [![Build](https://img.shields.io/travis/ontic/ansible-role-nginx/master.svg)](https://travis-ci.org/ontic/ansible-role-nginx) | [![Galaxy](https://img.shields.io/badge/galaxy-ontic.nginx-blue.svg)](https://galaxy.ansible.com/list#/roles/5628) | [![Release](https://img.shields.io/github/release/ontic/ansible-role-nginx.svg)](https://github.com/ontic/ansible-role-nginx/releases) |
+| **master**         | [![Build](https://img.shields.io/travis/ontic/ansible-role-nginx/master.svg)](https://travis-ci.org/ontic/ansible-role-nginx) | [![Galaxy](https://img.shields.io/badge/galaxy-ontic.nginx-blue.svg)](https://galaxy.ansible.com/ontic/nginx/) | [![Release](https://img.shields.io/github/release/ontic/ansible-role-nginx.svg)](https://github.com/ontic/ansible-role-nginx/releases) |
 
 ## Introduction
 

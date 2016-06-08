@@ -7,63 +7,63 @@
 
 ---
 
-- name: Nginx | Debian | Add launchpad PPA.
+- name: 'Nginx | Debian | Add launchpad PPA.'
   become: yes
   apt_repository:
     repo: '{{ nginx_ppa }}'
     update_cache: yes
-  when: ansible_os_family == 'Debian' and nginx_ppa
+  when: '{{ ansible_os_family == "Debian" and nginx_ppa | default(None) != None }}'
 
-- name: Nginx | Debian | Update repository key.
+- name: 'Nginx | Debian | Update repository key.'
   become: yes
   apt_key:
     id: '{{ nginx_repo_key_id }}'
     keyserver: '{{ nginx_repo_key_server }}'
     state: '{{ nginx_repo_state }}'
-  register: nginx_key
-  when: ansible_os_family == 'Debian'
+  register: 'nginx_key'
+  when: '{{ ansible_os_family == "Debian" }}'
 
-- name: Nginx | Debian | Update repository list.
+- name: 'Nginx | Debian | Update repository list.'
   become: yes
   apt_repository:
     repo: '{{ nginx_repo_url }}'
     state: '{{ nginx_repo_state }}'
-  register: nginx_list
-  when: ansible_os_family == 'Debian'
+  register: 'nginx_list'
+  when: '{{ ansible_os_family == "Debian" }}'
 
-- name: Nginx | Debian | Update APT cache.
+- name: 'Nginx | Debian | Update APT cache.'
   become: yes
   apt:
     update_cache: yes
-  when: ansible_os_family == 'Debian' and (nginx_key.changed or nginx_list.changed)
+  when: '{{ ansible_os_family == "Debian" and (nginx_key.changed or nginx_list.changed) }}'
 
-- name: Nginx | RedHat | Remove absent repository.
+- name: 'Nginx | RedHat | Remove absent repository.'
   become: yes
   file:
     path: '/etc/yum.repos.d/{{ nginx_repo_uid }}.repo'
-    state: absent
-  register: nginx_repo_removed
-  when: ansible_os_family == 'RedHat' and nginx_repo_state | default('present') == 'absent'
+    state: 'absent'
+  register: 'nginx_repo_removed'
+  when: '{{ ansible_os_family == "RedHat" and nginx_repo_state | default("present") == "absent" }}'
 
-- name: Nginx | RedHat | Add present repository.
+- name: 'Nginx | RedHat | Add present repository.'
   become: yes
   template:
-    src: yum.repo.j2
+    src: 'yum.repo.j2'
     dest: '/etc/yum.repos.d/{{ nginx_repo_uid }}.repo'
-    owner: root
-    group: root
-    mode: 0644
-  register: nginx_repo_added
-  when: ansible_os_family == 'RedHat' and nginx_repo_state | default('present') == 'present'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  register: 'nginx_repo_added'
+  when: '{{ ansible_os_family == "RedHat" and nginx_repo_state | default("present") == "present" }}'
 
-- name: Nginx | Debian | Install Curl Python package.
+- name: 'Nginx | Debian | Install Curl Python package.'
   become: yes
   apt:
-    pkg: python-pycurl
-    state: present
-  when: ansible_os_family == 'Debian'
+    pkg: 'python-pycurl'
+    state: 'present'
+  when: '{{ ansible_os_family == "Debian" }}'
 
-- name: Nginx | Debian | Install Nginx packages.
+- name: 'Nginx | Debian | Install Nginx packages.'
   become: yes
   apt:
     name: '{{ item.name if item.version is not defined else item.name + "=" + item.version }}'
@@ -78,9 +78,9 @@
     update_cache: '{{ item.update_cache | default(omit) }}'
     upgrade: '{{ item.upgrade | default(omit) }}'
   with_items: '{{ nginx_packages }}'
-  when: ansible_os_family == 'Debian' and nginx_packages
+  when: '{{ ansible_os_family == "Debian" }}'
 
-- name: Nginx | RedHat | Install Nginx packages.
+- name: 'Nginx | RedHat | Install Nginx packages.'
   become: yes
   yum:
     name: '{{ item.name if item.version is not defined else item.name + "-" + item.version }}'
@@ -93,4 +93,4 @@
     state: '{{ item.state | default(omit) }}'
     update_cache: '{{ nginx_repo_removed.changed or nginx_repo_added.changed or item.update_cache | default(omit) }}'
   with_items: '{{ nginx_packages }}'
-  when: ansible_os_family == 'RedHat' and nginx_packages
+  when: '{{ ansible_os_family == "RedHat" }}'

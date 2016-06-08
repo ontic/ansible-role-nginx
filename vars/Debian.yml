@@ -8,10 +8,10 @@
 ---
 
 nginx_default_packages:
-  - name: nginx
+  - name: 'nginx'
 
-nginx_dir: /etc/nginx
-nginx_conf_path: /etc/nginx/conf.d
-nginx_vhost_path: /etc/nginx/sites-enabled
-nginx_default_vhost_filename: default
-nginx_default_user: www-data
+nginx_dir: '/etc/nginx'
+nginx_conf_path: '/etc/nginx/conf.d'
+nginx_vhost_path: '/etc/nginx/sites-enabled'
+nginx_default_vhost_filename: 'default'
+nginx_default_user: 'www-data'

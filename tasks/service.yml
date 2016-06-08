@@ -7,14 +7,16 @@
 
 ---
 
-- name: Nginx | Disable Apache service.
+- name: 'Nginx | Disable Apache service.'
+  become: yes
   service:
     name: '{{ "apache2" if ansible_os_family == "Debian" else "httpd" }}'
-    state: stopped
+    state: 'stopped'
     enabled: no
-  when: nginx_disable_apache and nginx_disable_apache == true
+  when: '{{ nginx_disable_apache }}'
 
-- name: Nginx | Enable Nginx service.
+- name: 'Nginx | Enable Nginx service.'
+  become: yes
   service:
     name: '{{ nginx_service_name }}'
     state: '{{ nginx_service_state }}'

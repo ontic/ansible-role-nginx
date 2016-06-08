@@ -7,34 +7,34 @@
 
 ---
 
-- name: Nginx | Ensure the vhost directory exists.
+- name: 'Nginx | Ensure the vhost directory exists.'
   become: yes
   file:
     path: '{{ nginx_vhost_path }}'
-    state: directory
-    owner: root
-    group: root
-    mode: 0755
+    state: 'directory'
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
 
-- name: Nginx | Ensure the ssl directory exists.
+- name: 'Nginx | Ensure the ssl directory exists.'
   become: yes
   file:
     path: '{{ nginx_dir }}/ssl'
-    state: directory
-    owner: root
-    group: root
-    mode: 0755
+    state: 'directory'
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
 
-- name: Nginx | Ensure the default vhost exists in the vhost path.
+- name: 'Nginx | Ensure the default vhost exists in the vhost path.'
   become: yes
   command: 'mv {{ nginx_conf_path }}/default.conf {{ nginx_vhost_path | quote }}/default'
   args:
     creates: '{{ nginx_vhost_path }}/default'
     removes: '{{ nginx_conf_path }}/default.conf'
-  notify: restart nginx
-  when: nginx_conf_path != nginx_vhost_path
+  notify: 'restart nginx'
+  when: '{{ nginx_conf_path != nginx_vhost_path }}'
 
-- name: Nginx | Configure SSL certificate files.
+- name: 'Nginx | Configure SSL certificate files.'
   become: yes
   copy:
     dest: '{{ nginx_dir }}/ssl/{{ item.name }}'
@@ -44,68 +44,68 @@
     group: 'root'
     owner: 'root'
   with_items: '{{ nginx_ssl_files }}'
-  when: nginx_ssl_files | default(None) != None
+  when: '{{ nginx_ssl_files | default(None) != None }}'
 
-- name: Nginx | Configure mime types file.
+- name: 'Nginx | Configure mime types file.'
   become: yes
   template:
     src: '{{ nginx_mime_types_template }}'
     dest: '{{ nginx_dir }}/mime.types'
-    owner: root
-    group: root
-    mode: 0644
-  notify: restart nginx
-  when: nginx_mime_types_template | default(None) != None
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify: 'restart nginx'
+  when: '{{ nginx_mime_types_template | default(None) != None }}'
 
-- name: Nginx | Configure present config files.
+- name: 'Nginx | Configure present config files.'
   become: yes
   template:
     src: '{{ item.template }}'
     dest: '{{ nginx_conf_path }}/{{ item.filename }}'
-    owner: root
-    group: root
-    mode: 0644
-  notify: restart nginx
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify: 'restart nginx'
   with_items: '{{ nginx_config_templates }}'
-  when: nginx_config_templates and item.state | default('present') != 'absent'
+  when: '{{ nginx_config_templates and item.state | default("present") != "absent" }}'
 
-- name: Nginx | Configure absent config files.
+- name: 'Nginx | Configure absent config files.'
   become: yes
   file:
     path: '{{ nginx_conf_path }}/{{ item.filename }}'
-    state: absent
-  notify: restart nginx
+    state: 'absent'
+  notify: 'restart nginx'
   with_items: '{{ nginx_config_templates }}'
-  when: nginx_config_templates and item.state | default('present') == 'absent'
+  when: '{{ nginx_config_templates and item.state | default("present") == "absent" }}'
 
-- name: Nginx | Configure present server files.
+- name: 'Nginx | Configure present server files.'
   become: yes
   template:
     src: '{{ item.template }}'
     dest: '{{ nginx_vhost_path }}/{{ item.filename }}'
-    owner: root
-    group: root
-    mode: 0644
-  notify: restart nginx
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify: 'restart nginx'
   with_items: '{{ nginx_server_templates }}'
-  when: item.state | default('present') != 'absent'
+  when: '{{ item.state | default("present") != "absent" }}'
 
-- name: Nginx | Configure absent server files.
+- name: 'Nginx | Configure absent server files.'
   become: yes
   file:
     path: '{{ nginx_vhost_path }}/{{ item.filename }}'
-    state: absent
-  notify: restart nginx
+    state: 'absent'
+  notify: 'restart nginx'
   with_items: '{{ nginx_server_templates }}'
-  when: item.state | default('present') == 'absent'
+  when: '{{ item.state | default("present") == "absent" }}'
 
-- name: Nginx | Configure Nginx conf file.
+- name: 'Nginx | Configure Nginx conf file.'
   become: yes
   template:
     src: '{{ nginx_conf_template }}'
     dest: '{{ nginx_dir }}/nginx.conf'
-    owner: root
-    group: root
-    mode: 0644
-  when: nginx_conf_template | default(None) != None
-  notify: restart nginx
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify: 'restart nginx'
+  when: '{{ nginx_conf_template | default(None) != None }}'
