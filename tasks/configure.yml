@@ -88,7 +88,7 @@
     mode: '0644'
   notify: 'restart nginx'
   with_items: '{{ nginx_server_templates }}'
-  when: '{{ item.state | default("present") != "absent" }}'
+  when: '{{ nginx_server_templates and item.state | default("present") != "absent" }}'
 
 - name: 'Nginx | Configure absent server files.'
   become: yes
@@ -97,7 +97,7 @@
     state: 'absent'
   notify: 'restart nginx'
   with_items: '{{ nginx_server_templates }}'
-  when: '{{ item.state | default("present") == "absent" }}'
+  when: '{{ nginx_server_templates and item.state | default("present") == "absent" }}'
 
 - name: 'Nginx | Configure Nginx conf file.'
   become: yes
