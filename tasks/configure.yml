@@ -1,9 +1,5 @@
-# This source file is subject to the (Open Source Initiative) BSD license
-# that is bundled with this package in the LICENSE file. It is also available
-# through the world-wide-web at this URL: http://www.ontic.com.au/license.html
-# If you did not receive a copy of the license and are unable to obtain it through
-# the world-wide-web, please send an email to license@ontic.com.au immediately.
-# Copyright (c) 2010-2016 Ontic. (http://www.ontic.com.au). All rights reserved.
+# Copyright (c) Ontic. (http://www.ontic.com.au). All rights reserved.
+# See the COPYING file bundled with this package for license details.
 
 ---
 
@@ -32,7 +28,7 @@
     creates: '{{ nginx_vhost_path }}/default'
     removes: '{{ nginx_conf_path }}/default.conf'
   notify: 'restart nginx'
-  when: '{{ nginx_conf_path != nginx_vhost_path }}'
+  when: 'nginx_conf_path != nginx_vhost_path'
 
 - name: 'Nginx | Configure SSL certificate files.'
   become: yes
@@ -44,7 +40,7 @@
     group: 'root'
     owner: 'root'
   with_items: '{{ nginx_ssl_files }}'
-  when: '{{ nginx_ssl_files | default(None) != None }}'
+  when: 'nginx_ssl_files | default(None) != None'
 
 - name: 'Nginx | Configure mime types file.'
   become: yes
@@ -55,7 +51,7 @@
     group: 'root'
     mode: '0644'
   notify: 'restart nginx'
-  when: '{{ nginx_mime_types_template | default(None) != None }}'
+  when: 'nginx_mime_types_template | default(None) != None'
 
 - name: 'Nginx | Configure present config files.'
   become: yes
@@ -67,7 +63,7 @@
     mode: '0644'
   notify: 'restart nginx'
   with_items: '{{ nginx_config_templates }}'
-  when: '{{ nginx_config_templates and item.state | default("present") != "absent" }}'
+  when: 'nginx_config_templates and item.state | default("present") != "absent"'
 
 - name: 'Nginx | Configure absent config files.'
   become: yes
@@ -76,7 +72,7 @@
     state: 'absent'
   notify: 'restart nginx'
   with_items: '{{ nginx_config_templates }}'
-  when: '{{ nginx_config_templates and item.state | default("present") == "absent" }}'
+  when: 'nginx_config_templates and item.state | default("present") == "absent"'
 
 - name: 'Nginx | Configure present server files.'
   become: yes
@@ -88,7 +84,7 @@
     mode: '0644'
   notify: 'restart nginx'
   with_items: '{{ nginx_server_templates }}'
-  when: '{{ nginx_server_templates and item.state | default("present") != "absent" }}'
+  when: 'nginx_server_templates and item.state | default("present") != "absent"'
 
 - name: 'Nginx | Configure absent server files.'
   become: yes
@@ -97,7 +93,7 @@
     state: 'absent'
   notify: 'restart nginx'
   with_items: '{{ nginx_server_templates }}'
-  when: '{{ nginx_server_templates and item.state | default("present") == "absent" }}'
+  when: 'nginx_server_templates and item.state | default("present") == "absent"'
 
 - name: 'Nginx | Configure Nginx conf file.'
   become: yes
@@ -108,4 +104,4 @@
     group: 'root'
     mode: '0644'
   notify: 'restart nginx'
-  when: '{{ nginx_conf_template | default(None) != None }}'
+  when: 'nginx_conf_template | default(None) != None'
