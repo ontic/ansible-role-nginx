@@ -3,7 +3,7 @@
 
 ---
 
-- name: 'Node.js | Debian | Install HTTPS transport.'
+- name: 'Nginx | Debian | Install HTTPS transport.'
   become: yes
   apt:
     name: 'apt-transport-https'
