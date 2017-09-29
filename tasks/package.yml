@@ -20,8 +20,7 @@
 - name: 'Nginx | Debian | Update repository key.'
   become: yes
   apt_key:
-    id: '{{ nginx_repo_key_id }}'
-    keyserver: '{{ nginx_repo_key_server }}'
+    url: '{{ nginx_repo_key_url }}'
     state: '{{ nginx_repo_state }}'
   register: 'nginx_key'
   when: 'ansible_os_family == "Debian"'
@@ -31,6 +30,7 @@
   apt_repository:
     repo: '{{ nginx_repo_url }}'
     state: '{{ nginx_repo_state }}'
+    filename: 'nginx'
   register: 'nginx_list'
   when: 'ansible_os_family == "Debian"'
 
