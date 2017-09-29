@@ -3,6 +3,13 @@
 
 ---
 
+- name: 'Node.js | Debian | Install HTTPS transport.'
+  become: yes
+  apt:
+    name: 'apt-transport-https'
+    state: 'present'
+  when: 'ansible_os_family == "Debian"'
+
 - name: 'Nginx | Debian | Add launchpad PPA.'
   become: yes
   apt_repository:
