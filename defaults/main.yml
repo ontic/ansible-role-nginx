@@ -11,7 +11,7 @@ nginx_repo_baseurl: 'http://nginx.org/packages/centos/{{ ansible_distribution_ma
 nginx_repo_gpgkey: 'http://nginx.org/keys/nginx_signing.key'
 nginx_repo_gpgcheck: '1'
 nginx_repo_enabled: '1'
-nginx_repo_url: 'deb http://nginx.org/packages/ubuntu/ {{ ansible_distribution_release | lower }} nginx'
+nginx_repo_url: 'deb http://nginx.org/packages/{{ ansible_distribution | lower }}/ {{ ansible_distribution_release | lower }} nginx'
 nginx_repo_key_url: 'http://nginx.org/keys/nginx_signing.key'
 nginx_service_name: 'nginx'
 nginx_service_state: 'started'

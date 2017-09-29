@@ -74,17 +74,12 @@ nginx_repo_url: 'deb http://nginx.org/packages/ubuntu/ {{ ansible_distribution_r
 
 The repository URL for Debian/Ubuntu.
 
-```
-nginx_repo_key_id: '7BD9BF62'
-```
-
-The repository key identifier for Debian/Ubuntu.
 
 ```
 nginx_repo_key_server: 'http://nginx.org/keys/nginx_signing.key'
 ```
 
-The keyserver to provide the GPG key for Debian/Ubuntu.
+The GPG key URL for Debian/Ubuntu.
 
 ```
 nginx_service_name:
