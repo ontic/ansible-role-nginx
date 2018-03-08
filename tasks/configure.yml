@@ -15,7 +15,16 @@
 - name: 'Nginx | Ensure the ssl directory exists.'
   become: yes
   file:
-    path: '{{ nginx_dir }}/ssl'
+    path: '{{ nginx_ssl_path }}'
+    state: 'directory'
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+
+- name: 'Nginx | Ensure the snippets directory exists.'
+  become: yes
+  file:
+    path: '{{ nginx_snippets_path }}'
     state: 'directory'
     owner: 'root'
     group: 'root'
@@ -52,6 +61,27 @@
     mode: '0644'
   notify: 'restart nginx'
   when: 'nginx_mime_types_template | default(None) != None'
+
+- name: 'Nginx | Configure present snippet files.'
+  become: yes
+  template:
+    src: '{{ item.template }}'
+    dest: '{{ nginx_snippets_path }}/{{ item.filename }}'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify: 'restart nginx'
+  with_items: '{{ nginx_snippet_templates }}'
+  when: 'nginx_snippet_templates and item.state | default("present") != "absent"'
+
+- name: 'Nginx | Configure absent snippet files.'
+  become: yes
+  file:
+    path: '{{ nginx_snippets_path }}/{{ item.filename }}'
+    state: 'absent'
+  notify: 'restart nginx'
+  with_items: '{{ nginx_snippet_templates }}'
+  when: 'nginx_snippet_templates and item.state | default("present") == "absent"'
 
 - name: 'Nginx | Configure present config files.'
   become: yes

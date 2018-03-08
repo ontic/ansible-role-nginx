@@ -21,6 +21,7 @@ nginx_packages:
 nginx_ssl_files:
 nginx_conf_template: 'default.nginx.conf.j2'
 nginx_mime_types_template: 'default.mime.types.j2'
+nginx_snippet_templates:
 nginx_config_templates:
 nginx_server_templates:
   - filename: 'default'

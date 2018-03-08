@@ -27,19 +27,43 @@
     - 'configure'
     - 'service'
 
-- include: 'package.yml'
+- name: 'Nginx | Define Nginx ssl path.'
+  set_fact:
+    nginx_ssl_path: '{{ nginx_dir }}/ssl'
+  tags:
+    - 'nginx'
+    - 'nginx-package'
+    - 'nginx-configure'
+    - 'nginx-service'
+    - 'package'
+    - 'configure'
+    - 'service'
+
+- name: 'Nginx | Define Nginx snippets path.'
+  set_fact:
+    nginx_snippets_path: '{{ nginx_dir }}/snippets'
+  tags:
+    - 'nginx'
+    - 'nginx-package'
+    - 'nginx-configure'
+    - 'nginx-service'
+    - 'package'
+    - 'configure'
+    - 'service'
+
+- include_tasks: 'package.yml'
   tags:
     - 'nginx'
     - 'nginx-package'
     - 'package'
 
-- include: 'configure.yml'
+- include_tasks: 'configure.yml'
   tags:
     - 'nginx'
     - 'nginx-configure'
     - 'configure'
 
-- include: 'service.yml'
+- include_tasks: 'service.yml'
   tags:
     - 'nginx'
     - 'nginx-service'

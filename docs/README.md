@@ -139,6 +139,15 @@ nginx_mime_types_template: 'default.mime.types.j2'
 The template file name that replaces the Nginx mime types file.
 
 ```
+nginx_snippet_templates:
+```
+
+The snippet files you would like to manage. Each item expects two parameters, `filename` which is the
+name of the destination file and `template`, which is the name of the source template file. An optional
+parameter `state` can be specified, valid values are `present` (*Default*) or `absent`. When defined and the value is
+`absent` a destination file matching the `filename` parameter will be removed.
+
+```
 nginx_config_templates:
 ```
 
