@@ -51,19 +51,19 @@
     - 'configure'
     - 'service'
 
-- include_tasks: 'package.yml'
+- import_tasks: 'package.yml'
   tags:
     - 'nginx'
     - 'nginx-package'
     - 'package'
 
-- include_tasks: 'configure.yml'
+- import_tasks: 'configure.yml'
   tags:
     - 'nginx'
     - 'nginx-configure'
     - 'configure'
 
-- include_tasks: 'service.yml'
+- import_tasks: 'service.yml'
   tags:
     - 'nginx'
     - 'nginx-service'
