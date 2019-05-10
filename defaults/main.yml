@@ -19,6 +19,10 @@ nginx_service_enabled: yes
 nginx_disable_apache: no
 nginx_packages:
 nginx_ssl_files:
+nginx_geoip_directory: '{{ nginx_dir }}/geoip'
+nginx_geoip_country_file: 'country.dat'
+nginx_geoip_city_file: 'city.dat'
+nginx_geoip_asn_file: 'asn.dat'
 nginx_conf_template: 'default.nginx.conf.j2'
 nginx_mime_types_template: 'default.mime.types.j2'
 nginx_snippet_templates:

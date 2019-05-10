@@ -27,6 +27,19 @@
     - 'configure'
     - 'service'
 
+- name: 'Nginx | Define Nginx GeoIP module installed.'
+  set_fact:
+    nginx_geoip_installed: '{{ nginx_packages | selectattr("name", "equalto", "nginx-module-geoip") | list | length > 0 }}'
+  when: 'not nginx_geoip_installed'
+  tags:
+    - 'nginx'
+    - 'nginx-package'
+    - 'nginx-configure'
+    - 'nginx-service'
+    - 'package'
+    - 'configure'
+    - 'service'
+
 - name: 'Nginx | Define Nginx ssl path.'
   set_fact:
     nginx_ssl_path: '{{ nginx_dir }}/ssl'

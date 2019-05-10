@@ -3,6 +3,9 @@
 ## Example
 
 ```
+nginx_packages:
+  - name: 'nginx'
+  - name: 'nginx-module-geoip'
 nginx_conf_template: 'example.com.nginx.conf.j2'
 nginx_server_templates:
   - filename: 'default'
@@ -125,6 +128,34 @@ The SSl certificate files you would like to manage. Each file expects two parame
 name of the destination file, you can either specify `src` when transferring a file or `content` when
 setting the contents of a file. An optional parameter `mode` can be specified, determining the permissions
 set on the destination file.
+
+```
+nginx_geoip_directory: '{{ nginx_dir }}/geoip'
+```
+
+The directory path where GeoIP databases will get downloaded to. Databases will only get downloaded and renewed
+automatically via CRON jobs, if the package name `nginx-module-geoip` is present. It's important to note that because
+the Nginx GeoIP module only supports the Maxmind databases in legacy format, we're downloading privately maintained
+databases from [here](https://www.miyuru.lk/geoiplegacy) which are built from official v2 sources, but converted to
+legacy format to be compatible.
+
+```
+nginx_geoip_country_file: 'country.dat'
+```
+
+The file name of the GeoIP country database.
+
+```
+nginx_geoip_city_file: 'city.dat'
+```
+
+The file name of the GeoIP city database.
+
+```
+nginx_geoip_asn_file: 'asn.dat'
+```
+
+The file name of the GeoIP ASN database.
 
 ```
 nginx_conf_template: 'default.nginx.conf.j2'

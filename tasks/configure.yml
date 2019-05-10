@@ -39,6 +39,31 @@
   notify: 'restart nginx'
   when: 'nginx_conf_path != nginx_vhost_path'
 
+- name: 'Nginx | Ensure the GeoIP database directory exists.'
+  become: yes
+  file:
+    path: '{{ nginx_geoip_directory }}'
+    state: 'directory'
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+  when: 'nginx_geoip_installed'
+
+- name: 'Nginx | Ensure the GeoIP databases are up to date.'
+  become: yes
+  shell: 'cd {{ nginx_geoip_directory }} && wget -N -q {{ item.source }} && gunzip -f {{ item.source | basename }} && mv -f {{ item.source | basename | replace(".gz", "") }} {{ item.file }}'
+  with_items:
+    - name: 'country'
+      file: '{{ nginx_geoip_country_file }}'
+      source: 'https://dl.miyuru.lk/geoip/maxmind/country/maxmind4.dat.gz'
+    - name: 'city'
+      file: '{{ nginx_geoip_city_file }}'
+      source: 'https://dl.miyuru.lk/geoip/maxmind/city/maxmind4.dat.gz'
+    - name: 'asn'
+      file: '{{ nginx_geoip_asn_file }}'
+      source: 'https://dl.miyuru.lk/geoip/maxmind/asn/maxmind4.dat.gz'
+  when: 'nginx_geoip_installed'
+
 - name: 'Nginx | Configure SSL certificate files.'
   become: yes
   copy:
@@ -135,3 +160,26 @@
     mode: '0644'
   notify: 'restart nginx'
   when: 'nginx_conf_template | default(None) != None'
+
+- name: 'Nginx | Configure cron jobs for renewing GeoIP databases.'
+  become: yes
+  cron:
+    name: 'geoip-{{ item.name }}-database'
+    user: 'root'
+    job: 'cd {{ nginx_geoip_directory }} && wget -N -q {{ item.source }} && gunzip -f {{ item.source | basename }} && mv -f {{ item.source | basename | replace(".gz", "") }} {{ item.file }}'
+    minute:  '0'
+    hour:    '2'
+    day:     '*'
+    month:   '*'
+    weekday: '0'
+    state: '{{ nginx_geoip_installed | ternary("present", "absent") }}'
+  with_items:
+    - name: 'country'
+      file: '{{ nginx_geoip_country_file }}'
+      source: 'https://dl.miyuru.lk/geoip/maxmind/country/maxmind4.dat.gz'
+    - name: 'city'
+      file: '{{ nginx_geoip_city_file }}'
+      source: 'https://dl.miyuru.lk/geoip/maxmind/city/maxmind4.dat.gz'
+    - name: 'asn'
+      file: '{{ nginx_geoip_asn_file }}'
+      source: 'https://dl.miyuru.lk/geoip/maxmind/asn/maxmind4.dat.gz'
