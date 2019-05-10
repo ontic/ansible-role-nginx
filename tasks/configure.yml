@@ -49,20 +49,17 @@
     mode: '0755'
   when: 'nginx_geoip_installed'
 
-- name: 'Nginx | Ensure the GeoIP databases are up to date.'
+- name: 'Nginx | Check the existence of GeoIP databases.'
+  stat:
+    path: '{{ nginx_geoip_directory }}/{{ item.file }}'
+  with_items: '{{ nginx_geoip_databases }}'
+  register: 'check_nginx_geoip_databases'
+
+- name: 'Nginx | Ensure the GeoIP databases are downloaded.'
   become: yes
   shell: 'cd {{ nginx_geoip_directory }} && wget -N -q {{ item.source }} && gunzip -f {{ item.source | basename }} && mv -f {{ item.source | basename | replace(".gz", "") }} {{ item.file }}'
-  with_items:
-    - name: 'country'
-      file: '{{ nginx_geoip_country_file }}'
-      source: 'https://dl.miyuru.lk/geoip/maxmind/country/maxmind4.dat.gz'
-    - name: 'city'
-      file: '{{ nginx_geoip_city_file }}'
-      source: 'https://dl.miyuru.lk/geoip/maxmind/city/maxmind4.dat.gz'
-    - name: 'asn'
-      file: '{{ nginx_geoip_asn_file }}'
-      source: 'https://dl.miyuru.lk/geoip/maxmind/asn/maxmind4.dat.gz'
-  when: 'nginx_geoip_installed'
+  with_items: '{{ check_nginx_geoip_databases.results }}'
+  when: 'nginx_geoip_installed and not item.stat.exists'
 
 - name: 'Nginx | Configure SSL certificate files.'
   become: yes
@@ -173,13 +170,4 @@
     month:   '*'
     weekday: '0'
     state: '{{ nginx_geoip_installed | ternary("present", "absent") }}'
-  with_items:
-    - name: 'country'
-      file: '{{ nginx_geoip_country_file }}'
-      source: 'https://dl.miyuru.lk/geoip/maxmind/country/maxmind4.dat.gz'
-    - name: 'city'
-      file: '{{ nginx_geoip_city_file }}'
-      source: 'https://dl.miyuru.lk/geoip/maxmind/city/maxmind4.dat.gz'
-    - name: 'asn'
-      file: '{{ nginx_geoip_asn_file }}'
-      source: 'https://dl.miyuru.lk/geoip/maxmind/asn/maxmind4.dat.gz'
+  with_items: '{{ nginx_geoip_databases }}'
