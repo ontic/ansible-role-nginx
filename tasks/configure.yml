@@ -57,7 +57,7 @@
 
 - name: 'Nginx | Ensure the GeoIP databases are downloaded.'
   become: yes
-  shell: 'cd {{ nginx_geoip_directory }} && wget -N -q {{ item.source }} && gunzip -f {{ item.source | basename }} && mv -f {{ item.source | basename | replace(".gz", "") }} {{ item.file }}'
+  shell: 'cd {{ nginx_geoip_directory }} && wget -N -q {{ item.item.source }} && gunzip -f {{ item.item.source | basename }} && mv -f {{ item.item.source | basename | replace(".gz", "") }} {{ item.item.file }}'
   with_items: '{{ check_nginx_geoip_databases.results }}'
   when: 'nginx_geoip_installed and not item.stat.exists'
 
