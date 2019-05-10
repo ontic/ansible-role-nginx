@@ -4,6 +4,10 @@
 ---
 
 - hosts: 'localhost'
+  vars:
+    nginx_packages:
+      - name: 'nginx'
+      - name: 'nginx-module-geoip'
   roles:
     - { role: 'ontic.cron' }
     - { role: 'role_under_test' }
