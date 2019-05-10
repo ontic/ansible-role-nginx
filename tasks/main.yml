@@ -29,7 +29,7 @@
 
 - name: 'Nginx | Define Nginx GeoIP module installed.'
   set_fact:
-    nginx_geoip_installed: '{{ nginx_packages | selectattr("name", "equalto", "nginx-module-geoip") | list | length > 0 }}'
+    nginx_geoip_installed: '{{ nginx_packages | selectattr("name", "match", "^nginx-module-geoip") | list | length > 0 }}'
   tags:
     - 'nginx'
     - 'nginx-package'
